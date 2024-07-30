@@ -1,0 +1,29 @@
+import oracledb
+import os
+
+# Initialize Oracle Client
+lib_dir = "instantclient_21_14"
+os.environ["LD_LIBRARY_PATH"]= lib_dir
+oracledb.init_oracle_client(lib_dir=lib_dir)
+
+#If you want to run locally uncomment
+#oracledb.init_oracle_client(lib_dir=r"C:\workspace\oracle\instantclient_21_14#")
+
+def lambda_handler(event, context):
+    connection = oracledb.connect(
+        user="FLCPD0_ATM",
+        password="flcpd0$0tm20@22",
+        dsn="flhk-vida-dev-oracle-data.flhk-np.maximus.com:1521/DB"
+    )
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM system_ref")
+    result = cursor.fetchall()
+    for row in result:
+        print(row)
+    cursor.close()
+    connection.close()
+
+    return result
+
+#if __name__ == '__main__':
+ #   lambda_handler()
